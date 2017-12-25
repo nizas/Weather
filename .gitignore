@@ -1,10 +1,7 @@
-# Xcode
+#Xcode
 #CocoaPods
 Pods
 Podfile.lock
-
-
-# Created by https://www.gitignore.io
 
 ### Xcode ###
 build/
