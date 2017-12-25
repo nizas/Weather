@@ -1,5 +1,5 @@
 //
-//  AppDelegate.h
+//  WeatherTableViewCell.h
 //  Weather
 //
 //  Created by Valerii Mykhailenko on 12/12/17.
@@ -7,11 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <CoreData/CoreData.h>
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate>
+@interface WeatherTableViewCell : UITableViewCell
 
-@property (strong, nonatomic) UIWindow *window;
+- (void)fillCellWith:(NSString *)cityName;
 
 @end
-

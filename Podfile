@@ -6,4 +6,5 @@ target 'Weather' do
   	pod 'AFNetworking'
 	pod 'MagicalRecord'
 	pod 'SDWebImage'
+	pod 'CLLocationManager-blocks'
 end

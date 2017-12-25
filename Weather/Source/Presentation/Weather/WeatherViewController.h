@@ -6,8 +6,8 @@
 //  Copyright © 2017 Mykhailenko Valerii. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import "RootViewController.h"
 
-@interface SelectionCityViewController : UIViewController
+@interface WeatherViewController : RootViewController
 
 @end
