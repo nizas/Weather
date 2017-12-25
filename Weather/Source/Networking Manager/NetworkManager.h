@@ -8,8 +8,12 @@
 
 #import <Foundation/Foundation.h>
 
+typedef void (^NetworkCompletionBlock)(NSDictionary *weatherInfo);
+
 @interface NetworkManager : NSObject
 
-- (void)getWeatherInCity:(NSString *)city withCallback:(void (^)(NSDictionary *weatherInfo))callback;
+- (void)getWeatherIn:(NSString *)city withRequestCompletion:(NetworkCompletionBlock)completion;
+
+- (void)getWeatherByLat:(double)lat andLon:(double)lon withRequestCompletion:(NetworkCompletionBlock)completion;
 
 @end

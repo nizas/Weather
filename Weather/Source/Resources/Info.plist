@@ -54,5 +54,9 @@
           </dict>
       </dict>
   </dict>
+  <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+  <string>Allow the program to use your location to display the current weather.</string>
+  <key>NSLocationWhenInUseUsageDescription</key>
+  <string>Allow the program to use your location to display the current weather.</string>
 </dict>
 </plist>

@@ -9,17 +9,16 @@
 #import "NetworkManager.h"
 #import "AFNetworking/AFNetworking.h"
 
-//http://api.openweathermap.org/data/2.5/weather?q=london&units=metric&APPID=cfaf5cbe7aa6ce57a05ffc40c6e39359
-
 @interface NetworkManager ()
 
 @property (strong, nonatomic) AFURLSessionManager *manager;
 
 @end
 
-static NSString const *apiKey = @"&units=metric&APPID=cfaf5cbe7aa6ce57a05ffc40c6e39359"; //api with metric system
+static NSString const *apiKey = @"&units=metric&APPID=6bc0b502577ea73ec155f4a195674083"; //api with metric system
 static NSString const *baceUrl = @"http://api.openweathermap.org/"; //base URL
-static NSString const *weatherUrl = @"data/2.5/weather?q="; //weather
+static NSString const *weatherCityUrl = @"data/2.5/weather?q="; //getting weather from the name of the city
+static NSString const *weatherWithCoordinatesUrl = @"data/2.5/weather?"; //getting the weather from the coordinates of the city | need to substitute the coordinates data/2.5/weather?lat=37.7858&lon=122.40
 
 @implementation NetworkManager
 
@@ -32,27 +31,43 @@ static NSString const *weatherUrl = @"data/2.5/weather?q="; //weather
     return self;
 }
 
-- (void)getWeatherInCity:(NSString *)city withCallback:(void (^)(NSDictionary *weatherInfo))callback {
-    NSString *urlString = [NSString stringWithFormat:@"%@%@%@%@", baceUrl, weatherUrl, city, apiKey];
+- (void)getWeatherIn:(NSString *)city withRequestCompletion:(NetworkCompletionBlock)completion {
+    NSString *cityName = [city stringByReplacingOccurrencesOfString:@" " withString:@"%20"]; //if the city name contains 2 words
+    NSString *urlString = [NSString stringWithFormat:@"%@%@%@%@", baceUrl, weatherCityUrl, cityName, apiKey];
     NSURL *URL = [NSURL URLWithString:urlString];
+    [self getWeatherFrom:URL withRequestCompletion:^(NSDictionary *weatherInfo) {
+        completion(weatherInfo);
+    }];
+}
+
+- (void)getWeatherByLat:(double)lat andLon:(double)lon withRequestCompletion:(NetworkCompletionBlock)completion {
+    NSString *urlString = [NSString stringWithFormat:@"%@%@lat=%f&lon=%f%@", baceUrl, weatherWithCoordinatesUrl, lat, lon, apiKey];
+    NSURL *URL = [NSURL URLWithString:urlString];
+    [self getWeatherFrom:URL withRequestCompletion:^(NSDictionary *weatherInfo) {
+        completion(weatherInfo);
+    }];
+}
+
+- (void)getWeatherFrom:(NSURL *)URL withRequestCompletion:(NetworkCompletionBlock)completion {
     NSURLRequest *request = [NSURLRequest requestWithURL:URL];
     NSURLSessionDataTask *dataTask = [self.manager dataTaskWithRequest:request
                                                      completionHandler:^(NSURLResponse *response, id responseObject, NSError *error) {
         if (error) {
-            callback(nil);
+            completion(nil);
         } else {
             NSDictionary *weatherInfo = @{@"city" : [responseObject valueForKey:@"name"],
                                           @"temperature" : [[responseObject valueForKey:@"main"] valueForKey:@"temp"],
+                                          @"temperature_min" : [[responseObject valueForKey:@"main"] valueForKey:@"temp_min"],
+                                          @"temperature_max" : [[responseObject valueForKey:@"main"] valueForKey:@"temp_max"],
                                           @"wind" : [[responseObject valueForKey:@"wind"] valueForKey:@"speed"],
                                           @"humidity" : [[responseObject valueForKey:@"main"] valueForKey:@"humidity"],
                                           @"clouds" : [[responseObject valueForKey:@"clouds"] valueForKey:@"all"],
                                           @"image" : [[[responseObject valueForKey:@"weather"] objectAtIndex:0] valueForKey:@"icon"]
-                                       };
-            callback(weatherInfo);
-        }
+                                        };
+            completion(weatherInfo);
+        };
     }];
     [dataTask resume];
 }
 
 @end
-
