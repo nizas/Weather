@@ -16,7 +16,7 @@
 @end
 
 static NSString const *apiKey = @"&units=metric&APPID=6bc0b502577ea73ec155f4a195674083"; //api with metric system
-static NSString const *baceUrl = @"http://api.openweathermap.org/"; //base URL
+static NSString const *baseUrl = @"http://api.openweathermap.org/"; //base URL
 static NSString const *weatherCityUrl = @"data/2.5/weather?q="; //getting weather from the name of the city
 static NSString const *weatherWithCoordinatesUrl = @"data/2.5/weather?"; //getting the weather from the coordinates of the city | need to substitute the coordinates data/2.5/weather?lat=37.7858&lon=122.40
 
@@ -33,7 +33,7 @@ static NSString const *weatherWithCoordinatesUrl = @"data/2.5/weather?"; //getti
 
 - (void)getWeatherIn:(NSString *)city withRequestCompletion:(NetworkCompletionBlock)completion {
     NSString *cityName = [city stringByReplacingOccurrencesOfString:@" " withString:@"%20"]; //if the city name contains 2 words
-    NSString *urlString = [NSString stringWithFormat:@"%@%@%@%@", baceUrl, weatherCityUrl, cityName, apiKey];
+    NSString *urlString = [NSString stringWithFormat:@"%@%@%@%@", baseUrl, weatherCityUrl, cityName, apiKey];
     NSURL *URL = [NSURL URLWithString:urlString];
     [self getWeatherFrom:URL withRequestCompletion:^(NSDictionary *weatherInfo) {
         completion(weatherInfo);
@@ -41,7 +41,7 @@ static NSString const *weatherWithCoordinatesUrl = @"data/2.5/weather?"; //getti
 }
 
 - (void)getWeatherByLat:(double)lat andLon:(double)lon withRequestCompletion:(NetworkCompletionBlock)completion {
-    NSString *urlString = [NSString stringWithFormat:@"%@%@lat=%f&lon=%f%@", baceUrl, weatherWithCoordinatesUrl, lat, lon, apiKey];
+    NSString *urlString = [NSString stringWithFormat:@"%@%@lat=%f&lon=%f%@", baseUrl, weatherWithCoordinatesUrl, lat, lon, apiKey];
     NSURL *URL = [NSURL URLWithString:urlString];
     [self getWeatherFrom:URL withRequestCompletion:^(NSDictionary *weatherInfo) {
         completion(weatherInfo);
